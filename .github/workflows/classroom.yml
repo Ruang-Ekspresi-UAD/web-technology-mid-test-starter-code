@@ -27,10 +27,13 @@ jobs:
           npx playwright install
 
       - name: Run UI tests for Soal ${{ matrix.soal }}
-        if: ${{ exists('Soal ' + matrix.soal + '/tests/ui.test.js') }}
         run: |
-          cd "Soal ${{ matrix.soal }}/tests"
-          npx playwright test ui.test.js --reporter=junit
+          if [ -f "Soal ${{ matrix.soal }}/tests/ui.test.js" ]; then
+            cd "Soal ${{ matrix.soal }}/tests"
+            npx playwright test ui.test.js --reporter=junit
+          else
+            echo "No UI test file found for Soal ${{ matrix.soal }}."
+          fi
         env:
           PLAYWRIGHT_JUNIT_OUTPUT_NAME: "ui-test-results-${{ matrix.soal }}.xml"
 
